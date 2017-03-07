@@ -1,0 +1,232 @@
+ <!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<style type="text/css">
+			/*.set{
+				position: relative;
+			}*/
+			.popupMenu{
+				/*position: absolute;*/
+				width: 100px;
+				border: 1px solid black;
+				display: none;
+				/*float: right;*/
+				/*left: 30px;*/
+				margin-left: 30px;
+			}
+			li{
+				list-style: none;
+				margin-left: -40px;
+			}
+			li:hover{
+				background: red;
+			}
+			/*ul{
+				float: right;
+			}*/
+			
+			
+			.clear:after{
+				content: '';
+				overflow: hidden;	
+				clear: both;
+			}
+			a{
+				text-decoration: none;
+				color: black;
+			}
+			
+		</style>
+		<script type="text/javascript" src="js/jquery-1.8.3.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			
+			$(function(){
+				
+				function popup(id,type,data){
+					var $popup =$('#popup_'+id);
+					
+					bindAddBtn();
+					
+					
+					$(document).off().on('click',function(){
+						closePopup();
+					})
+					
+					//阻止冒泡
+					$('#custom_'+id).on('click',function(){
+						return false;
+					})
+					
+					//相同功能：添加显示按钮操作
+					function bindAddBtn(){
+						$('#add_'+id).on('click',function(){
+							closePopup();
+							if(type ==1){
+								createRadio();
+							}
+							else if(type ==2){
+								createMore();
+							}
+							
+							$popup.show();
+							
+						})
+						
+					}
+					
+					//相同功能：初始添加数据列表
+					function setInitData(){
+						var $ul=$('<ul>');
+						$.each(data, function() {
+							
+							var $li=$('<li><span>'+this.name+'</span></li>');
+							$ul.append($li);
+				
+						});
+						//方案1
+						/*$popup.html('').append($ul);		*/
+						$popup.append($ul);
+					}
+					//相同功能：关闭弹层
+					function closePopup(){
+						$('.popupMenu').hide();
+					}
+					
+					
+					
+					//不相同的功能：创建单选
+					function createRadio(){
+						if(!$popup.find('ul').length){
+								setInitData();
+						}
+						
+					
+						
+						
+					}
+					//不相同的功能：创建多项
+					function createMore(){
+						if(!$popup.find('ul').length){
+						setInitData();
+						setAllCus();
+						}
+					}
+					//不相同的功能：全选
+					function setAllCus(){
+						var $allCus=$('<div><a href="javascript:;">全选</a></div>');
+						$popup.prepend($allCus);
+					
+						
+					}
+				}
+				
+				
+				popup('1000',1,[
+				{name:'办公室'},
+				{name:'会议室'},
+				{name:'室外'},
+				{name:'咖啡厅'}
+				]);
+				
+				popup('2000',1,[
+				{name:'8:00~9:00'},
+				{name:'9:00~10:00'},
+				{name:'10:00~11:00'},
+				{name:'11:00~12:00'},
+				{name:'17:00~16:00'},
+				
+				
+				]);
+				
+				popup('3000',2,[
+				{name:'李彦宏1'},
+				{name:'马云1'},
+				{name:'马化腾1'},
+				{name:'李玉柱1'},
+				{name:'马云1'},
+				{name:'李彦宏1'},
+				{name:'李彦宏1'},
+				{name:'李彦宏1'},
+				{name:'李彦宏1'},
+				{name:'李彦宏1'},
+				{name:'李彦宏1'},
+				]);
+				
+				popup('4000',2,[
+				{name:'采购部'},
+				{name:'行政部'},
+				{name:'人事部'},
+				{name:'技术部'},
+				{name:'IT部'},
+				{name:'公关部'},
+				{name:'法务部'},
+				{name:'财务部'},
+				]);
+					
+			});
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		</script>
+	</head>
+	<body>
+		<div id="div1">
+			<div id="custom_1000" class="set">
+				<label>地点:</label><div id="main_1000" class="writeText">
+					
+				</div>
+				<input type="button" id="add_1000" value="+" class="btn"/>
+				<input type="button" id="remove_1000" value="-" class="btn"/>
+				<div id="popup_1000" class="popupMenu">
+					
+				</div>
+			</div>
+			<br class="clear" />
+			<div id="custom_2000" class="set">
+				<label>时间:</label><div id="main_2000" class="writeText">
+					
+				</div>
+				<input type="button" id="add_2000" value="+" class="btn"/>
+				<input type="button" id="remove_2000" value="-" class="btn"/>
+				<div id="popup_2000" class="popupMenu">
+					
+				</div>
+			</div>
+			<br class="clear" />
+			<div id="custom_3000" class="set">
+				<label>人员:</label><div id="main_3000" class="writeText">
+					
+				</div>
+				<input type="button" id="add_3000" value="+" class="btn"/>
+				<input type="button" id="remove_3000" value="-" class="btn"/>
+				<div id="popup_3000" class="popupMenu">
+					
+				</div>
+			</div>
+			<br class="clear" />
+			<div id="custom_4000" class="set">
+				<label>部门:</label><div id="main_4000" class="writeText">
+					
+				</div>
+				<input type="button" id="add_4000" value="+" class="btn"/>
+				<input type="button" id="remove_4000" value="-" class="btn"/>
+				<div id="popup_4000" class="popupMenu">
+					
+				</div>
+			</div>
+			<br class="clear" />
+			
+		</div>
+	</body>
+</html>
