@@ -7,6 +7,11 @@
 			/*.set{
 				position: relative;
 			}*/
+			
+			#div1{
+				width: 500px;
+				margin: 200px auto;
+			}
 			.popupMenu{
 				/*position: absolute;*/
 				width: 100px;
@@ -37,19 +42,38 @@
 				text-decoration: none;
 				color: black;
 			}
+			.cur{
+				background: red;
+			}
+			.writeText{
+				width: 200px;
+				
+				border: 1px solid black;
+				min-height: 20px;
+			}
+			
+			label,.btn,.writeText{
+				vertical-align: top;
+				display: inline-block;
+			}
+			
 			
 		</style>
-		<script type="text/javascript" src="js/jquery-1.8.3.min.js">
-			
-		</script>
+		<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
 		<script type="text/javascript">
 			
 			$(function(){
 				
 				function popup(id,type,data){
 					var $popup =$('#popup_'+id);
+					var $main=$('#main_'+id);
+					var $remove=$('#remove_'+id);
+					
 					
 					bindAddBtn();
+					
+					textRemoveBtn();
+					clearAll();
 					
 					
 					$(document).off().on('click',function(){
@@ -70,11 +94,9 @@
 							}
 							else if(type ==2){
 								createMore();
-							}
-							
-							$popup.show();
-							
-						})
+							}		
+							$popup.show();	
+						});
 						
 					}
 					
@@ -82,48 +104,163 @@
 					function setInitData(){
 						var $ul=$('<ul>');
 						$.each(data, function() {
-							
 							var $li=$('<li><span>'+this.name+'</span></li>');
 							$ul.append($li);
 				
-						});
+						})
 						//方案1
 						/*$popup.html('').append($ul);		*/
 						$popup.append($ul);
-					}
+					};
 					//相同功能：关闭弹层
 					function closePopup(){
 						$('.popupMenu').hide();
+					};
+					
+					
+					//相同功能：清空按键
+					function clearAll(){
+						$remove.on('click',function(){
+							/*$main.html('');
+							$popup.find('span').attr('class','');*/
+							
+							$main.find('span').trigger('click');
+							
+							$('.popupMenu').hide();
+							
+						})
+						
 					}
 					
+					
+					
+		
+					//相同功能：删除指定的输入框值
+					function textRemoveBtn(){
+						$main.delegate('span','click',function(){
+							$(this).remove();
+							$popup.find('span').attr('class','');
+						})
+					}
+						
+					
+					
+		
+		
 					
 					
 					//不相同的功能：创建单选
 					function createRadio(){
 						if(!$popup.find('ul').length){
 								setInitData();
+								bindRadio();
 						}
-						
-					
-						
-						
-					}
+					};
 					//不相同的功能：创建多项
 					function createMore(){
 						if(!$popup.find('ul').length){
 						setInitData();
 						setAllCus();
+						bindMore();
 						}
 					}
-					//不相同的功能：全选
-					function setAllCus(){
-						var $allCus=$('<div><a href="javascript:;">全选</a></div>');
-						$popup.prepend($allCus);
 					
+					
+					//不同的功能：单选操作
+					function bindRadio(){
+						$popup.find('span').on('click',function(){
+							if($(this).attr('class') !='cur'){
+								$popup.find('span').attr('class','');
+								$(this).attr('class','cur');
+								textRadio.add( $(this).html(),$(this).parent().index());
+							}else{
+								$(this).attr('class','');
+								textRadio.remove($(this).parent().index());
+							}
+							
+						})
+						
+					};
+					
+					//不同的功能：多选操作
+					function bindMore(){
+						$popup.find('span').on('click',function(){
+							if($(this).attr('class')!='cur'){
+								$(this).attr('class','cur');
+								textMore.add( $(this).html(), $(this).parent().index() );
+							}else{
+								$(this).attr('class','');
+								textMore.remove($(this).parent().index());
+							}
+							
+						})
+						
 						
 					}
+					
+					
+					
+					//不同的操作：单选进入取消--使用闭包写法
+					var textRadio =(function(){
+						
+						function add(text,index){
+							/*var $span=$('<span>'+text+'<em></em></span>');
+							$main.append($span);*/
+							//append是添加，而html()是替换
+							var strSpan='<span nowindex='+index+'>'+text+'<em></em></span>';
+							$main.html(strSpan);
+							
+						}
+						function remove(){
+							$main.empty(); 	
+						}
+							return {
+								add:add,
+								remove:remove
+							}
+						
+					})();
+					
+					
+					//不同功能：多选
+					var textMore=(function(){
+						
+						function add(text,index){
+							var $span=('<span nowindex='+index+'>'+text+'<em></em></span>')
+							
+							$main.append($span);
+						}
+						function remove(index){
+							
+							$main.find('span').each(function() {
+								if($(this).attr('nowindex') == index){
+									$(this).remove();
+								}
+							})
+						}
+							return {
+								add:add,
+								remove:remove
+							}
+					})();
+					
+
+					
+					//不相同的功能：全选
+					function setAllCus(){
+						var $allCus=$('<div><a>全选</a></div>');
+							$popup.prepend($allCus);
+						
+						
+							$allCus.on('click',function(){
+								$popup.find('span').each(function(){
+									if($(this).attr('class')!='cur'){	
+										$(this).trigger('click');
+									}
+								})
+							})
+					}
 				}
-				
 				
 				popup('1000',1,[
 				{name:'办公室'},
